@@ -1,0 +1,244 @@
+<div class="widgets">
+  <!-- membuat button add Add New Role Types. -->
+  <div class="ui-helper-clearfix">
+    <div class="add-new-button__container">
+      <div class="btn-group add-new-dropdown" style="float: right">
+        <button (click)="addRole()" class="btn btn-primary" style="float:right">
+                <i class="icon ion-plus-round"></i>
+                  New Role 
+              </button>
+      </div>
+    </div>
+  </div>
+
+  <ba-card baCardClass="with-scroll">
+    <!-- error if can't loading data   -->
+    <div class="alert alert-danger" *ngIf="errMsgList.length > 0">
+      <ul style="margin-bottom: 0px;" class="lst-error">
+        <li *ngFor="let err of errMsgList">
+          {{err}}
+        </li>
+      </ul>
+    </div>
+    <!-- <spinner *ngIf="isSpinerLoading"></spinner> -->
+    <p-dataTable #dt [value]="lstRole" [lazy]="true" (onLazyLoad)="refreshRole($event, dt)" [rows]="10" [paginator]="true" [totalRecords]="totalRecords"
+      sortField="name" sortOrder="-1" styleClass="custom-filter-datatable">
+      <p-header>
+        <div class="ui-helper-clearfix">
+          <button type="button" iconPos="left" label="CSV" (click)="downloadRoleCSV(dt)" style="float:left" class="btn-export__csv">
+                            <i class="icon ion-ios-download-outline"></i>
+                        </button>
+
+          <div class="btn-group" dropdown style="float: right">
+            <reset-filter (click)="resetFiltersRole(dt)"></reset-filter>
+
+            <button title="Refresh" type="button" class="btn-sets-right" (click)="refreshRole($event, dt)">
+                          <i class="icon ion-ios-reload"></i>
+                        </button>
+          </div>
+
+        </div>
+      </p-header>
+      <p-column field="roleId" header="Role ID"></p-column>
+      <p-column field="name" header="Name" [style]="{'width':'280px'}" sortable="true" [filter]="false">
+        <template pTemplate="header">
+          <span class="ui-column-title">Name </span>
+          <sortable-filter-input #rolefilter [dataTable]="dt" field="name" [disabled]="isSpinerLoading" (onFilter)="onRolefilter($event)"></sortable-filter-input>
+        </template>
+      </p-column>
+      <p-column field="description" header="Description"></p-column>
+      <p-column field="roleTypeId" header="Role Type ID"></p-column>
+      <p-column styleClass="col-button">
+        <template pTemplate="header">
+          Action
+        </template>
+        <template let-dataRole="rowData" pTemplate="body">
+          <div class="btn-group" dropdown>
+            <button id="single-button" type="button" class="btn btn-primary" dropdownToggle>
+                              Action <span class="caret"></span>
+                            </button>
+            <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                  <li role="menuitem"><a class="dropdown-item" (click)="viewRole(dataRole)">View</a></li>
+                  <li role="menuitem"><a class="dropdown-item" (click)="editRole(dataRole)">Edit</a></li>
+                  <li role="menuitem"><a class="dropdown-item" (click)="deleteRole(dataRole)">Delete</a></li>
+            </ul>
+          </div>
+        </template>
+      </p-column>
+    </p-dataTable>
+
+  </ba-card>
+</div>
+
+<div bsModal #addNewModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button class="close" aria-label="Close" (click)="hideChildModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          <h4 class="modal-title">Add New Role</h4>
+          <hr/>
+        </div>
+        <div class="modal-body">
+          <div>
+            <ba-card title="" baCardClass="with-scroll custom-card">
+              <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
+                <div class="alert alert-danger" *ngIf="errMsg.length > 0">
+                  <ul style="margin-bottom: 0px;" class="lst-error">
+                    <li *ngFor="let err of errMsg">
+                      {{err}}
+                    </li>
+                  </ul>
+                </div>
+  
+                <div class="modal-form-container">
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <label>Name</label>
+                      <input [formControl]="name" type="text" class="form-control" id="inputEmail3" placeholder="Name">
+                      <div *ngIf="form.controls['name'].hasError('required') && form.controls['name'].touched">
+                        <div class="error-message col-xg-10" style="padding-top:3px;"> Name is required </div>
+                      </div>
+                      <div *ngIf="form.controls['name'].hasError('minlength') && (form.controls['name'].dirty || form.get('name').touched)">
+                        <div class="error-message col-xg-10" style="padding-top:3px;"> Minimum of 2 characters </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                      <label>Description</label>
+                      <input [formControl]="description" type="text" class="form-control" id="inputPassword3" placeholder="Description">
+                      <div *ngIf="form.controls['description'].hasError('required') && form.controls['description'].touched">
+                        <div class="error-message col-xg-10" style="padding-top:3px;"> Description is required </div>
+                      </div>
+                      <div *ngIf="form.controls['description'].hasError('minlength') && (form.controls['description'].dirty || form.get('description').touched)">
+                        <div class="error-message col-xg-10" style="padding-top:3px;"> Minimum of 2 characters </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group modal-action-row row">
+                  <div class="col-sm-3 btn-with-icon">
+                    <button type="button" class="btn btn-default btn-cancel" (click)="cancel()">
+                      <i class="icon ion-close"></i>
+                      Cancel</button>
+                  </div>
+                  <div class="col-sm-5">
+                    &nbsp;
+                  </div>
+                  <div class="col-sm-1 no-padding">
+                    <span *ngIf="submitLoading" class="loading-container">
+                              <loading-small></loading-small>
+                          </span>
+                  </div>
+                  <div class="col-sm-3 btn-with-icon">
+                    <button type="submit" class="btn btn-default btn-save"><i class="icon ion-checkmark"></i> Save</button>
+                  </div>
+                </div>
+              </form>
+            </ba-card>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div bsModal #editModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button class="close" aria-label="Close" (click)="hideChildModal()">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title">{{viewTittle}}</h4>
+            <hr/>
+          </div>
+          <div class="modal-body">
+            <div>
+              <ba-card title="" baCardClass="with-scroll custom-card">
+                <form [formGroup]="edit_form" (ngSubmit)="onSubmitEdit(edit_form.value, $event)" class="form-horizontal">
+                  <div class="alert alert-danger" *ngIf="errMsgEdit.length > 0">
+                    <ul style="margin-bottom: 0px;" class="lst-error">
+                      <li *ngFor="let err of errMsgEdit">
+                        {{err}}
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="modal-form-container">
+                    <div class="form-group row">
+                      <div class="col-sm-12">
+                        <label>Name</label>
+                        <input [formControl]="edit_name" type="text" class="form-control" id="inputEmail3" placeholder="Name" >
+                        <div *ngIf="edit_form.controls['edit_name'].hasError('required') && edit_form.controls['edit_name'].touched">
+                          <div class="error-message col-xg-10" style="padding-top:3px;"> Name is required </div>
+                        </div>
+                        <div *ngIf="edit_form.controls['edit_name'].hasError('minlength') && (edit_form.controls['edit_name'].dirty || edit_form.controls['edit_name'].touched)">
+                          <div class="error-message col-xg-10" style="padding-top:3px;"> Minimum of 2 characters </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group row">
+                      <div class="col-sm-12">
+                        <label>Description</label>
+                        <input [formControl]="edit_description" type="text" class="form-control" id="inputPassword3" placeholder="Description" [class.readonly]="applyReadonly">
+                        <div *ngIf="edit_form.controls['edit_description'].hasError('required') && edit_form.controls['edit_description'].touched">
+                          <div class="error-message col-xg-10" style="padding-top:3px;"> Description is required </div>
+                        </div>
+                        <div *ngIf="edit_form.controls['edit_description'].hasError('minlength') && (edit_form.controls['edit_description'].dirty || edit_form.controls['edit_description'].touched)">
+                          <div class="error-message col-xg-10" style="padding-top:3px;"> Minimum of 2 characters </div>
+                        </div>
+                      </div>
+                    </div>
+    
+                  </div>
+                  <div class="form-group modal-action-row row">
+                    <div class="col-sm-3 btn-with-icon">
+                      <button type="button" class="btn btn-default btn-cancel" (click)="cancel()">
+                        <i class="icon ion-close"></i>
+                        Cancel</button>
+                    </div>
+                    <div class="col-sm-5">
+                      &nbsp;
+                    </div>
+                    <div class="col-sm-1 no-padding">
+                      <span *ngIf="submitLoading" class="loading-container">
+                                <loading-small></loading-small>
+                            </span>
+                    </div>
+                    <div class="col-sm-3 btn-with-icon">
+                      <button type="submit" class="btn btn-default btn-save" [hidden]="isVisible">
+                        <i class="icon ion-checkmark"></i>
+                            Save
+                        </button>
+                    </div>
+                  </div>
+                </form>
+              </ba-card>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div bsModal #deleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+      
+            </div>
+            <div class="modal-body">
+              <div class="content_confirm">
+                <h3>Delete {{delete_name}}?</h3>
+              </div>
+              <div class="delete-btn_confirm">
+                <button (click)="saveDelete()" class="btn-yes">
+                Yes
+              </button>
+                <button (click)="deleteClose()" class="btn-no">
+                No
+              </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>

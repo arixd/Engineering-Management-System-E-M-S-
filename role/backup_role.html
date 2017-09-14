@@ -1,0 +1,136 @@
+<!-- <div class="widgets">
+    <ba-card title="WO Role" baCardClass="with-scroll">
+        <p-dataTable #dt [value]="role">
+          <p-header>
+            <div class="ui-helper-clearfix">
+                <button type="button" iconPos="left" label="CSV" (click)="dt.exportCSV()" style="float:left" class="btn-export__csv">
+                    <i class="icon ion-ios-download-outline"></i>
+                </button>
+                <button (click)="addRole()" class="btn btn-primary" style="float:right">Add New Role Types</button>
+            </div>
+        </p-header>
+           <p-column field="id" header="Role ID"></p-column>
+            <p-column field="name" header="Name"></p-column>
+            <p-column field="description" header="Description"></p-column>
+            <p-column field="role_type_id" header="Role Type ID"></p-column>
+            <p-column styleClass="col-button">
+                    <template pTemplate="header">
+                        Action
+                    </template>
+                    <template let-role="rowData" pTemplate="body">
+                            <div class="btn-group" dropdown>
+                              <button id="single-button" type="button" class="btn btn-primary" dropdownToggle>
+                                Action <span class="caret"></span>
+                              </button>
+                              <ul dropdownMenu role="menu" aria-labelledby="single-button">
+                                <li role="menuitem"><a  class="dropdown-item" (click)="editRole(role)">Edit</a></li>
+                                <li role="menuitem"><a class="dropdown-item" (click)="deleteRole(role)">Delete</a></li>
+                              </ul>
+                            </div>
+                    </template>
+            </p-column>
+        </p-dataTable>
+    </ba-card>
+</div>
+<div bsModal #addNewModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" aria-label="Close" (click)="hideChildModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Add New Role</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+            <ba-card title="Add New Role" baCardClass="with-scroll">
+              <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)" class="form-horizontal">
+              <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+
+                <div class="col-sm-10">
+                  <input [formControl]="name" type="text" class="form-control" id="inputEmail3" placeholder="Name">
+                </div>
+              </div>
+              <div class="form-group row" [ngClass]="{'has-error': (!description.valid && description.touched), 'has-success': (description.valid && description.touched)}">
+                <label for="inputPassword3" class="col-sm-2 control-label">Description</label>
+
+                <div class="col-sm-10">
+                  <input [formControl]="description" type="text" class="form-control" id="inputPassword3" placeholder="Description">
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
+                  <button [disabled]="!form.valid" type="submit" class="btn btn-default btn-auth">Submit</button>
+                </div>
+              </div>
+            </form>
+            </ba-card>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #editModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button class="close" aria-label="Close" (click)="hideChildModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">Edit Role</h4>
+      </div>
+      <div class="modal-body">
+        <div>
+            <ba-card title="Edit Role" baCardClass="with-scroll">
+              <form [formGroup]="edit_form" (ngSubmit)="onSubmitEdit(edit_form.value, $event)" class="form-horizontal">
+              <div class="form-group row">
+                <label for="inputEmail3" class="col-sm-2 control-label">Name</label>
+
+                <div class="col-sm-10">
+                  <input [formControl]="edit_name" type="text" class="form-control" id="inputEmail3" placeholder="Name">
+                </div>
+              </div>
+              <div class="form-group row" [ngClass]="{'has-error': (!description.valid && description.touched), 'has-success': (description.valid && description.touched)}">
+                <label for="inputPassword3" class="col-sm-2 control-label">Description</label>
+
+                <div class="col-sm-10">
+                  <input [formControl]="edit_description" type="text" class="form-control" id="inputPassword3" placeholder="Description">
+                </div>
+              </div>
+              <div class="form-group row">
+                <div class="offset-sm-2 col-sm-10">
+                  <button [disabled]="!edit_form.valid" type="submit" class="btn btn-default btn-auth">Submit</button>
+                </div>
+              </div>
+            </form>
+            </ba-card>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #deleteModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+     
+      </div>
+      <div class="modal-body">
+		  <div class="content_confirm">
+				<h3>Delete {{delete_name}}?</h3>
+		  </div>
+		  <div class="delete-btn_confirm">
+			  <button (click)="saveDelete()" class="btn-yes">
+				  Yes
+			  </button>
+			  <button (click)="deleteClose()" class="btn-no">
+				  No
+			  </button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div> -->
